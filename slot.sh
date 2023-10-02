@@ -11,10 +11,11 @@ function log() {
 }
 
 # INITIALIZE VALUES #
-coins=10    # [Number] Number of coins
-speed=2     # [Number] Speed factor, must be a whole number of 0 or higher
-crank=0.05  # [Number] Handle animation speed
-autoplay=0  # [Bool] Game autoplay setting
+coins=10      # [Number] Number of coins
+speed=2       # [Number] Speed factor, must be a whole number of 0 or higher
+crank=0.05    # [Number] Handle animation speed
+autoplay=0    # [Bool] Game autoplay setting
+showhistory=0 # [Bool] Show graph of gambling history
 
 explanation="Bash script for a small slot machine game
 OPTIONS:
@@ -27,6 +28,9 @@ OPTIONS:
     
     -a
         Let the game play itself! Gambling has never been this boring.
+        
+    -g
+        Display a graph next to the slotmachine showing recent gambling history.
 
     -s [arg]
         Set a speed for the animations and symbol rotations. Animation speedup is currently disabled.
@@ -50,7 +54,7 @@ OPTIONS:
        
      
 
-while getopts "hs:ca" opt ; do
+while getopts "hs:cag" opt ; do
     case $opt in 
         h) # Display help
             # TODO: Expand help text to show different options
@@ -92,6 +96,10 @@ while getopts "hs:ca" opt ; do
             autoplay=1
             echo "Autoplay enabled. Sit back, relax, and statistically: lose your money."
             ;;
+        g)
+            showhistory=1
+            echo "Graph history enabled. Enjoy these useless statistics."
+            ;;
     esac
     sleep 1
 done
@@ -105,6 +113,8 @@ initialize () {
     trap "tput cnorm" EXIT
     # Hide the cursor
     tput civis
+    
+    hist=("$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins" "$coins")
 
     # Set the rotating symbol strings
     local sym="$(symbolarray mini)";
@@ -136,6 +146,8 @@ drawScreen () {
         done
     done
     drawer "$screen"
+    # TODO: store the graph while in a loop. It really should not be calculated during every frame.
+    if [ "$showhistory" -eq 1 ] ; then if [ "$autoplay" -eq 1 ] ; then graph "${hist[@]}"; fi; fi
 }
 
 # ROTATE GIVEN COLUMNS, 1 SYMBOL AT A TIME #
@@ -213,6 +225,11 @@ result () {
         fi
     fi
 }
+
+updatehistory() {
+    hist=("${hist[@]:1}" "$coins")
+}
+
 # Run the game loop
 run () {
     initialize;
@@ -221,10 +238,12 @@ run () {
     echo "PRESS ENTER TO PLAY!"
     while [ $coins -gt 0 ] ; do
         if [ $autoplay -ne 1 ] ; then
+            if [ "$showhistory" -eq 1 ] ; then graph "${hist[@]}"; fi
             read;
         fi
         pull;
         result;
+        updatehistory;
         ### TODO: save game state by writing values to a file ###
         drawScreen;
     done

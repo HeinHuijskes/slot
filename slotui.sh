@@ -231,15 +231,58 @@ replacestring () {
     echo "$body"
 }
 
+graph () {
+    local hist=("$@")
+    local scrnln=30
+    local height=10
+
+    max=${hist[0]}
+    min=${hist[0]}
+    for x in ${hist[@]} ; do
+        if [ $x -gt $max ] ; then max=$x; fi
+        if [ $x -lt $min ] ; then min=$x; fi
+    done
+    # Normalize data
+    #for x in ${hist[@]} ; do
+        
+    #done
+    #local difference=$((max-min))
+    #if [ $difference -lt $height ] ; then
+    #    difference=$height;
+    #fi
+    #local step=$(($difference/$height+1))
+    
+    #echo "step: $step"
+    #echo "diff: $difference"
+    #echo "height: $height"
+    #echo "max: $max"
+    #echo "min: $min"
+    #echo ""
+
+    x=$scrnln
+    #clear
+    for value in ${hist[@]} ; do
+        #echo "value: $value"
+        #echo "x: $x"
+        #echo "v/s: $(($value/$step))"
+        y=$(($value-$min))
+        y=$(($height-$y*$height/$max))
+        #echo "y: $y"
+        tput cup $y $x
+        printf "___"
+        x=$(($x+3))
+    done;
+}
+
 
 if [ "$function" = "None" ] ; then
     return 0
 fi
 
-functions=("initui" "drawer" "crank" "reversecrank" "replacestring")
+functions=("initui" "drawer" "crank" "reversecrank" "replacestring" "graph")
 for fun in ${functions[@]}; do
     if [ "$function" = "$fun" ] ; then
-        $function "$3" "$4" "$5"
+        $function "${@:3}"
     fi 
 done
 

@@ -19,3 +19,10 @@ clear
 
 bash slotui.sh -d initui mini;
 bash slotui.sh -d crank mini;
+
+sleep 1
+
+clear
+
+hist=(4 3 2 3 4 3 4 8 7 6 5 9 13 12 16 15 14 13 12 11 10)
+bash slotui.sh -d graph "${hist[@]}"
