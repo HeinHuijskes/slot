@@ -37,13 +37,14 @@ while getopts "hd:" opt ; do
 done
 
 initui () {
-    fileloc="./slot.txt"
+    local ui=''
+    local fileloc="./slot.txt"
     if [ "$1" = "mini" ] ; then
         fileloc="./minislot.txt"
     fi
 
     IFS=''
-    index=0
+    local index=0
     while read -r line; do
         ui[$index]="$line"
         index=$((index+1))
@@ -69,7 +70,12 @@ symbolarray() {
     echo "$symbols"
 }
 
-minicrank() {
+minicrank() {    
+    local speed=0.05
+    if [ -n $1 ] ; then
+        speed=$1
+    fi
+
     scrlen=24
     tput cup 1 $scrlen
     for i in {2..10} ; do
@@ -86,7 +92,7 @@ minicrank() {
         tput cup $i $scrlen
         printf '( )'
         
-        sleep 0.05;
+        sleep $speed;
     done
     for i in {3..10} ; do
         tput cup $((13-$i)) $scrlen
@@ -102,22 +108,27 @@ minicrank() {
         tput cup $((12-$i)) $scrlen
         printf '( )'
         
-        sleep 0.05;
+        sleep $speed;
     done
     return;
 }
 
 crank() {
     if [ "$1" = "mini" ] ; then
-        minicrank
+        minicrank $2
         return;
     fi
     
-    crankstart=9
-    scrlen=80
-    head="(  )"
-    shaft=" __ "
-    clear="    "
+    local speed=0.02
+    if [ -n $2 ] ; then
+        speed=$2
+    fi
+    
+    local crankstart=9
+    local scrlen=80
+    local head="(  )"
+    local shaft=" __ "
+    local clear="    "
 
     for i in {2..19} ; do
         if [ $i -eq 10 ] ; then
@@ -145,19 +156,24 @@ crank() {
             printf "$clear"
         fi
         
-        sleep 0.01
+        sleep $speed
     done
 }
 
-reversecrank() {
-    # TODO: perhaps merge crank and reversecrank using the array method `shafts` uses below
-    shafts=("    " "/   " " /  " "\\|/ " " || ")
-    crankstart=9
-    scrlen=80
+reversecrank() {    
+    local speed=0.02
+    if [ -n $2 ] ; then
+        speed=$2
+    fi
 
-    head="(__)"
-    shaft=${shafts[0]}
-    clear="    "
+    # TODO: perhaps merge crank and reversecrank using the array method `shafts` uses below
+    local shafts=("    " "/   " " /  " "\\|/ " " || ")
+    local crankstart=9
+    local scrlen=80
+
+    local head="(__)"
+    local shaft=${shafts[0]}
+    local clear="    "
 
     for i in {2..19} ; do
         if [ $i -eq 10 ] ; then
@@ -186,7 +202,7 @@ reversecrank() {
             printf "$clear"
         fi
         
-        sleep 0.01
+        sleep $speed
     done
 }
 
@@ -199,19 +215,19 @@ padstring() {
 
     local offset padding back;
     # Calculate needed total padding and offsets
-    padding=$(($2 - ${#1}));
-    offset=$(($padding / 2));
-    back=$(($2-$offset));
+    local padding=$(($2 - ${#1}));
+    local offset=$(($padding / 2));
+    local back=$(($2-$offset));
     # Add offset to the string and return it
     echo "$(printf "%${2}s" "$(printf "%-${back}s" "$1")")"
 }
 
 replacestring () {
-    string="$1"
-    locator="$2"
-    body="$3"
-    string=$(padstring "$string" "${#locator}")
-    body="${body/"$locator"/"$string"}";
+    local string="$1"
+    local locator="$2"
+    local body="$3"
+    local string=$(padstring "$string" "${#locator}")
+    local body="${body/"$locator"/"$string"}";
     echo "$body"
 }
 

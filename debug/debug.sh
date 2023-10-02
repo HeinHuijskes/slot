@@ -6,7 +6,7 @@ location="./logs.txt"
 while getopts ":hcs" opt ; do
     case $opt in 
         h) # Display help
-            echo $HOME/scripts/bash/help/debug;
+            echo "debugger";
             exit;;
         c)
             echo "" > "${location}"

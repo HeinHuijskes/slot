@@ -13,7 +13,8 @@ function log() {
 # INITIALIZE VALUES #
 coins=10    # [Number] Number of coins
 speed=2     # [Number] Speed factor, must be a whole number of 0 or higher
-crank=0.1   # [Number] Handle animation speed
+crank=0.05  # [Number] Handle animation speed
+autoplay=0  # [Bool] Game autoplay setting
 
 explanation="Bash script for a small slot machine game
 OPTIONS:
@@ -23,6 +24,9 @@ OPTIONS:
        
     -c [arg]
         Ever wanted more coins? Now you can! Enter any amount between 0 and 999 to have a different amount of coins than the boring regular 10.
+    
+    -a
+        Let the game play itself! Gambling has never been this boring.
 
     -s [arg]
         Set a speed for the animations and symbol rotations. Animation speedup is currently disabled.
@@ -46,7 +50,7 @@ OPTIONS:
        
      
 
-while getopts "hs:c" opt ; do
+while getopts "hs:ca" opt ; do
     case $opt in 
         h) # Display help
             # TODO: Expand help text to show different options
@@ -62,19 +66,19 @@ while getopts "hs:c" opt ; do
                     echo 'Set speed to instant';;
                 slow)
                     speed=3
-                    crank=0.2
+                    crank=0.1
                     echo 'Set speed to slow';;
                 medium)
                     speed=2
-                    crank=0.1
+                    crank=0.05
                     echo 'Set speed to medium';;
                 fast)
                     speed=1
-                    crank=0.05
+                    crank=0.02
                     echo 'Set speed to fast';;
                 *)
                     speed=2
-                    crank=0.1
+                    crank=0.05
                     echo 'Unknown, set speed to standard';
             esac
             ;;
@@ -83,6 +87,10 @@ while getopts "hs:c" opt ; do
             if [ $(($coins-$coins)) != 0 ] || [ $coins -gt 999 ] 2>/dev/null; then
                 coins=10;
             fi
+            ;;
+        a)
+            autoplay=1
+            echo "Autoplay enabled. Sit back, relax, and statistically: lose your money."
             ;;
     esac
     sleep 1
@@ -155,7 +163,7 @@ rotate () {
 }
 
 pull () {
-    minicrank
+    minicrank "$crank"
     help='ROLLING'
     coins=$(($coins-1));
     random[0]=$(($RANDOM % $symbolsize + $symbolsize*$speed))
@@ -164,17 +172,17 @@ pull () {
     for ((i=1;i<${random[0]};i++)) ; do
         rotate 1 2 3;
         drawScreen;
-        sleep 0.05;
+        sleep $crank;
     done;
     for ((i=1;i<${random[1]};i++)) ; do
         rotate 2 3;
         drawScreen;
-        sleep 0.05;
+        sleep $crank;
     done;
     for ((i=1;i<${random[2]};i++)) ; do
         rotate 3;
         drawScreen;
-        sleep 0.05;
+        sleep $crank;
     done;
     for i in {0..2} ; do
         local sym
@@ -212,7 +220,9 @@ run () {
     drawScreen;
     echo "PRESS ENTER TO PLAY!"
     while [ $coins -gt 0 ] ; do
-        read;
+        if [ $autoplay -ne 1 ] ; then
+            read;
+        fi
         pull;
         result;
         ### TODO: save game state by writing values to a file ###
