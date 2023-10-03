@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd "$HOME/scripts/bash/slot/"
+cd "$HOME/slot/"
 
 function="None"
 explanation="TUI for slot machine
@@ -71,10 +71,10 @@ symbolarray() {
 }
 
 minicrank() {    
-    local speed=0.05
-    if [ -n $1 ] ; then
-        speed=$1
-    fi
+    local speed=0.01
+    #if [ -n $1 ] ; then
+    #    speed=$1
+    #fi
 
     scrlen=24
     tput cup 1 $scrlen
@@ -120,9 +120,9 @@ crank() {
     fi
     
     local speed=0.02
-    if [ -n $2 ] ; then
-        speed=$2
-    fi
+    #if [ -n $1 ] ; then
+    #    speed=$1
+    #fi
     
     local crankstart=9
     local scrlen=80
@@ -162,9 +162,9 @@ crank() {
 
 reversecrank() {    
     local speed=0.02
-    if [ -n $2 ] ; then
-        speed=$2
-    fi
+    #if [ -n $1 ] ; then
+    #    speed=$1
+    #fi
 
     # TODO: perhaps merge crank and reversecrank using the array method `shafts` uses below
     local shafts=("    " "/   " " /  " "\\|/ " " || ")
@@ -242,32 +242,11 @@ graph () {
         if [ $x -gt $max ] ; then max=$x; fi
         if [ $x -lt $min ] ; then min=$x; fi
     done
-    # Normalize data
-    #for x in ${hist[@]} ; do
-        
-    #done
-    #local difference=$((max-min))
-    #if [ $difference -lt $height ] ; then
-    #    difference=$height;
-    #fi
-    #local step=$(($difference/$height+1))
-    
-    #echo "step: $step"
-    #echo "diff: $difference"
-    #echo "height: $height"
-    #echo "max: $max"
-    #echo "min: $min"
-    #echo ""
 
     x=$scrnln
-    #clear
     for value in ${hist[@]} ; do
-        #echo "value: $value"
-        #echo "x: $x"
-        #echo "v/s: $(($value/$step))"
         y=$(($value-$min))
         y=$(($height-$y*$height/$max))
-        #echo "y: $y"
         tput cup $y $x
         printf "___"
         x=$(($x+3))

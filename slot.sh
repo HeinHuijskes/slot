@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cd "$HOME/scripts/bash/slot/"
+cd "$HOME/slot/"
 
-debugger="../debug.sh"
+debugger="./debug/debug.sh"
 $debugger -c
 
 function log() {

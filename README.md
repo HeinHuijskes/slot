@@ -8,7 +8,7 @@ The new and improved graphics are still being developed, but a sneak peak can be
 
 Your linux distribution needs to be able to run shell scripts with bash. It should be at least a bash version that includes `printf`.
 
-Currently the `slot` folder encasing this project expects to be placed within the following folder hierarchy within your home folder: `~/scripts/bash/slot`. All scripts seen here are placed in that folder. If you want to change this, simply replace the line `cd "$HOME/scripts/bash/slot/"` with the correct folder in the `slot.sh` and `slotui.sh` scripts.
+Currently the files in this repository expect to be encased in a `slot` folder placed in your home folder e.g.: `~/slot/slot.sh`. All scripts seen here are placed in that folder. If you want to change this, simply move the `slot` folder and replace the line `cd "$HOME/slot/"` with the correct folder in the `slot.sh` and `slotui.sh` scripts.
 
 To see if some UI functionality is working, try running `bash testui.sh` from the slot folder. This should print some test results and show some ui animations if everything works.
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-location="./logs.txt"
+location="./debug/logs.txt"
 
 while getopts ":hcs" opt ; do
     case $opt in 
