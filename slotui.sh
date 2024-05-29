@@ -15,10 +15,12 @@ OPTIONS:
              Initializes the ui and returns it as a string. Use option mini for the smaller ui.
      
          draw [arg]
-             Clears the screen and draws the ui provided as an argument to the screen. 'initui' can be piped into this directly.
+             Clears the screen and draws the ui provided as an argument to the screen. 
+            'initui' can be piped into this directly.
      
          crank (mini)
-             Draws the crank animation on the screen. Presumes that a ui is already drawn to the screen, although this is not necessary.
+             Draws the crank animation on the screen. 
+             Presumes that a ui is already drawn to the screen, although this is not required.
        
          reversecrank (!mini)
              Same as crank, but in the opposite direction. Not yet functional for small ui"

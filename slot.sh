@@ -24,7 +24,8 @@ OPTIONS:
         Show this explanation
        
     -c [arg]
-        Ever wanted more coins? Now you can! Enter any amount between 0 and 999 to have a different amount of coins than the boring regular 10.
+        Ever wanted more coins? Now you can! Enter any amount between 0 and 999 to have a different 
+        amount of coins than the boring regular 10.
     
     -a
         Let the game play itself! Gambling has never been this boring.
@@ -156,7 +157,9 @@ rotate () {
     if [ -z $1 ] || [ $# -gt 25 ] ; then return 1; fi;
 
     local i len;
-    # Loop over all provided function arguments, which correspond to columns (may contain the same column multiple times), up to 25 columns total (this is an arbitrary limit)
+    # Loop over all provided function arguments, which correspond to columns 
+    # (may contain the same column multiple times)
+    # Up to 25 columns total (this is an arbitrary limit)
     for ((i=1;i<$(($#+1));i++)) ; do
         # Find the correct column based on the currently considered argument
         col=$((${@:$i:1}-1))
